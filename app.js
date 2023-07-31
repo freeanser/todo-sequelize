@@ -18,6 +18,7 @@ app.use(methodOverride('_method'))
 // routes
 // home
 app.get('/', (req, res) => {
+  // 資料轉換成 plain object: 查詢多筆資料：要在 findAll({ raw: true, nest: true}) 直接傳入參數
   return Todo.findAll({
     raw: true,
     nest: true
@@ -49,6 +50,15 @@ app.post('/users/register', (req, res) => {
 //logout
 app.get('/users/logout', (req, res) => {
   res.send('logout')
+})
+
+// details
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id
+  // 資料轉換成 plain object: 查詢單筆資料：在 res.render 時在物件實例 todo 後串上 todo.toJSON()
+  return Todo.findByPk(id)
+    .then(todo => res.render('detail', { todo: todo.toJSON() }))
+    .catch(error => console.log(error))
 })
 
 // listen
